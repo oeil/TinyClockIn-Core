@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (C) 2016 TekNux.org
+  ~
+  ~ This file is part of the TinyClockIn GPL Source Code.
+  ~
+  ~ TinyClockIn Source Code is free software: you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at your option)
+  ~ any later version.
+  ~
+  ~ TinyClockIn Source Code is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  ~ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with dropbitz Community Source Code.
+  ~ If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<configuration>
+    <property name="logback.pattern.light" value="[%d{HH:mm:ss}] [%-5p] %msg %ex%n" />
+    <property name="logback.pattern.full" value="[%d{yy-MM-dd HH:mm:ss.SSS}] [%-5p] (%-25c{0} %3L\\) %msg %ex{full}%n" />
+    <property name="logback.path" value="${logback.path:-logs}" />
+
+    <property name="log.level" value="${log.level:-INFO}" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${log.level}</level>
+        </filter>
+        
+        <encoder>
+            <pattern>${logback.pattern.light}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logback.path}/server.log</file>       
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logback.path}/server_%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${log.level}</level>
+        </filter>
+
+        <encoder>
+            <pattern>${logback.pattern.full}</pattern>
+        </encoder>
+    </appender>  
+    
+    <logger name="org.eclipse.jetty" level="WARN" />
+    <logger name="org.skife.config" level="WARN" />
+    <logger name="org.teknux.jettybootstrap" level="WARN" />
+
+    <root level="${logback.level.root}">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

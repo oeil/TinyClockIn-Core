@@ -1,0 +1,9 @@
+/target
+/logs
+/.classpath
+/.project
+/.settings
+/.idea/
+/feudboard.iml
+/config
+/src/main/resources/config.properties
