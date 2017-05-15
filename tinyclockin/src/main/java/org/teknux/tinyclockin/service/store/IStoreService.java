@@ -18,6 +18,7 @@
 
 package org.teknux.tinyclockin.service.store;
 
+import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.IService;
 
@@ -29,7 +30,9 @@ import java.util.List;
  */
 public interface IStoreService extends IService  {
 
-    public String getOrCreateToken(String userId);
+    public AuthToken getOrCreateToken(String userId);
+
+    public AuthToken findToken(String tokenId);
 
     public boolean isTokenExist(String tokenId);
 

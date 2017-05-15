@@ -47,19 +47,25 @@ public class StoreServiceImpl implements IStoreService {
     private final Object tokenLock = new Object();
 
     @Override
-    public String getOrCreateToken(final String userId) {
-        final Optional<AuthToken> storedAuthToken = tokenStore.stream().filter(t -> t.getUserId().equals(userId)).findFirst();
+    public AuthToken getOrCreateToken(final String userId) {
+        final Optional<AuthToken> storedAuthToken = tokenStore.stream().filter(t -> t.getEmail().equals(userId)).findFirst();
         if (storedAuthToken.isPresent()) {
-            return storedAuthToken.get().getToken();
+            return storedAuthToken.get();
         }
 
         synchronized (tokenLock) {
             final AuthToken authToken = new AuthToken();
             authToken.setToken(StringUtil.toHexString(StringUtil.md5(userId)));
-            authToken.setUserId(userId);
+            authToken.setEmail(userId);
             tokenStore.add(authToken);
-            return authToken.getToken();
+            return authToken;
         }
+    }
+
+    @Override
+    public AuthToken findToken(String tokenId) {
+        Optional<AuthToken> token = tokenStore.stream().filter(t -> t.getToken().equals(tokenId)).findFirst();
+        return token.isPresent() ? token.get() : null;
     }
 
     @Override

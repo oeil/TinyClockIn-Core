@@ -20,6 +20,7 @@ package org.teknux.tinyclockin.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.tinyclockin.controller.security.Secured;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.IServiceManager;
 import org.teknux.tinyclockin.service.ServiceManager;
@@ -35,74 +36,78 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 /**
  * @author Francois EYL
  */
-@Path("/api/")
+@Path("/api/actions")
+@Secured
 @Produces({ MediaType.APPLICATION_JSON })
-public class RestApiController {
+@Consumes({ MediaType.APPLICATION_JSON })
+public class ActionsController {
 
     @Inject
     private ServletContext servletContext;
-    @Context
-    private HttpServletRequest httpServletRequest;
 
-    private static Logger logger = LoggerFactory.getLogger(RestApiController.class);
+    @Context
+    private SecurityContext securityContext;
+
+    private static Logger logger = LoggerFactory.getLogger(ActionsController.class);
 
     private IServiceManager getServiceManager() {
         return Objects.requireNonNull(ServiceManager.get(servletContext));
     }
 
     @GET
-    @Path("actions")
     public List<ClockAction> actions(@QueryParam("latestOnly") Boolean latestOnly) {
         final StopWatch stopWatch = StopWatch.get();
+
+        final String email = securityContext.getUserPrincipal().getName();
+
         List<ClockAction> actionsToReturn = null;
         if (Boolean.TRUE.equals(latestOnly)) {
-            final ClockAction lastAction = getServiceManager().getService(IStoreService.class).getLastAction("toto");
+            final ClockAction lastAction = getServiceManager().getService(IStoreService.class).getLastAction(email);
             actionsToReturn = new ArrayList<>();
             if (lastAction != null) {
                 actionsToReturn.add(lastAction);
             }
         } else {
-            actionsToReturn = getServiceManager().getService(IStoreService.class).getActions("toto");
+            actionsToReturn = getServiceManager().getService(IStoreService.class).getActions(email);
         }
         logger.debug("GET /api/actions [{} items] [{} sec]", actionsToReturn.size(), stopWatch.stop().getSeconds());
         return actionsToReturn;
     }
 
     @POST
-    @Path("actions")
-    @Consumes({ MediaType.APPLICATION_JSON })
     public Response doAction(ClockAction action) {
         final StopWatch stopWatch = StopWatch.get();
 
-        Response errRsp = verifyAction(action);
+        final String email = securityContext.getUserPrincipal().getName();
+
+        Response errRsp = validateAction(action, email);
         if (errRsp != null) {
             return errRsp;
         }
 
-        getServiceManager().getService(IStoreService.class).storeAction("toto", action);
+        getServiceManager().getService(IStoreService.class).storeAction(email, action);
         logger.debug("POST /api/actions [{} | {}] [{} sec]", action.getType(), action.getWorkstation(), stopWatch.stop().getSeconds());
         return Response.status(Response.Status.OK).entity(action).build();
     }
 
-    private Response verifyAction(final ClockAction action) {
+    private Response validateAction(final ClockAction action, final String userId) {
         if (action == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("An action resource is expected!").type(MediaType.TEXT_PLAIN).build();
         }
 
-        final ClockAction lastAction = getServiceManager().getService(IStoreService.class).getLastAction("toto");
+        final ClockAction lastAction = getServiceManager().getService(IStoreService.class).getLastAction(userId);
         if (lastAction == null && action.getType() == 0) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Cannot Check-out, Check-in is required first!").type(MediaType.TEXT_PLAIN).build();
         } else if (lastAction != null && lastAction.getType() == action.getType()) {

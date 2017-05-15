@@ -23,15 +23,15 @@ package org.teknux.tinyclockin.model;
  */
 public class AuthToken {
 
-    private String userId;
+    private String email;
     private String token;
 
-    public String getUserId() {
-        return userId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getToken() {
@@ -51,14 +51,14 @@ public class AuthToken {
 
         AuthToken authToken = (AuthToken) o;
 
-        if (userId != null ? !userId.equals(authToken.userId) : authToken.userId != null)
+        if (email != null ? !email.equals(authToken.email) : authToken.email != null)
             return false;
         return token != null ? token.equals(authToken.token) : authToken.token == null;
     }
 
     @Override
     public int hashCode() {
-        int result = userId != null ? userId.hashCode() : 0;
+        int result = email != null ? email.hashCode() : 0;
         result = 31 * result + (token != null ? token.hashCode() : 0);
         return result;
     }

@@ -16,7 +16,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.teknux.tinyclockin.controller;
+package org.teknux.tinyclockin.controller.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

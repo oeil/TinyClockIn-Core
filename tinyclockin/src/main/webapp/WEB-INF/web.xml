@@ -31,7 +31,7 @@
 		</init-param>
 		<init-param>
 			<param-name>jersey.config.server.provider.classnames</param-name>
-			<param-value>org.glassfish.jersey.jackson.JacksonFeature, org.teknux.tinyclockin.controller.CorsResponseFilter</param-value>
+			<param-value>org.glassfish.jersey.jackson.JacksonFeature, org.teknux.tinyclockin.controller.security.CorsResponseFilter</param-value>
 		</init-param>
 	</filter>
 

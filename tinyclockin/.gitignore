@@ -4,6 +4,6 @@
 /.project
 /.settings
 /.idea/
-/feudboard.iml
+/tinyclockin-core.iml
 /config
 /src/main/resources/config.properties
