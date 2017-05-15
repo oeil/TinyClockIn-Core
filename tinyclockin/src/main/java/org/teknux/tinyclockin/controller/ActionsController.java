@@ -94,6 +94,7 @@ public class ActionsController {
 
         Response errRsp = validateAction(action, email);
         if (errRsp != null) {
+            logger.debug("POST /api/actions [Http Status: {} | Msg: {}] [{} sec]", errRsp.getStatus(), errRsp.getEntity(), stopWatch.stop().getSeconds());
             return errRsp;
         }
 
