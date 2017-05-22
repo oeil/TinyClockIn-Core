@@ -30,10 +30,14 @@ public class InMemoryStoreServiceTest {
 
         final String userId1 = "test.user1@test.org";
         final AuthToken user1AuthToken = storeService.getOrCreateToken(userId1);
+        Assert.assertNotNull(user1AuthToken.getToken());
+        Assert.assertFalse(user1AuthToken.getToken().trim().isEmpty());
         Assert.assertEquals(user1AuthToken, storeService.getOrCreateToken(userId1));
 
         final String userId2 = "test.user2@test.org";
         final AuthToken user2AuthToken = storeService.getOrCreateToken(userId2);
+        Assert.assertNotNull(user2AuthToken.getToken());
+        Assert.assertFalse(user2AuthToken.getToken().trim().isEmpty());
         Assert.assertEquals(user2AuthToken, storeService.getOrCreateToken(userId2));
 
         Assert.assertNotEquals(user1AuthToken, user2AuthToken);
