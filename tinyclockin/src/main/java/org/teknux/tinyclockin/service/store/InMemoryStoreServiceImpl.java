@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author Francois EYL
  */
-public class StoreServiceImpl implements IStoreService {
+public class InMemoryStoreServiceImpl implements IStoreService {
 
     private AtomicInteger idsIndex = new AtomicInteger(0);
 
@@ -48,6 +48,10 @@ public class StoreServiceImpl implements IStoreService {
 
     @Override
     public AuthToken getOrCreateToken(final String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return null;
+        }
+
         final Optional<AuthToken> storedAuthToken = tokenStore.stream().filter(t -> t.getEmail().equals(userId)).findFirst();
         if (storedAuthToken.isPresent()) {
             return storedAuthToken.get();

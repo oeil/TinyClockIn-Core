@@ -24,7 +24,7 @@ import org.teknux.tinyclockin.AppServlet;
 import org.teknux.tinyclockin.service.configuration.ConfigurationServiceImpl;
 import org.teknux.tinyclockin.service.configuration.IConfigurationService;
 import org.teknux.tinyclockin.service.store.IStoreService;
-import org.teknux.tinyclockin.service.store.StoreServiceImpl;
+import org.teknux.tinyclockin.service.store.InMemoryStoreServiceImpl;
 
 import javax.servlet.ServletContext;
 import java.util.LinkedHashMap;
@@ -50,7 +50,7 @@ public class ServiceManager implements IServiceManager {
         this.servletContext = context;
 
         services.put(IConfigurationService.class, new ConfigurationServiceImpl());
-        services.put(IStoreService.class, new StoreServiceImpl());
+        services.put(IStoreService.class, new InMemoryStoreServiceImpl());
     }
 
     public static IServiceManager get(ServletContext context) {

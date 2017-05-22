@@ -32,6 +32,16 @@ public class ClockAction {
     private String description;
     private int workstation;
 
+    public ClockAction() {
+    }
+
+    public ClockAction(int type, String description, int workstation) {
+        this();
+        this.type = type;
+        this.description = description;
+        this.workstation = workstation;
+    }
+
     public Integer getId() {
         return id;
     }
