@@ -27,7 +27,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * @author Francois EYL
  */
-public class StringUtil {
+public class MD5Util {
 
     /**
      * Returns the hexadecimal representation of the given byte array as a String.

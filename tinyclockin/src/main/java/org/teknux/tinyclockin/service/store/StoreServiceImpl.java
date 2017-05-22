@@ -22,7 +22,7 @@ import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.IServiceManager;
 import org.teknux.tinyclockin.service.ServiceException;
-import org.teknux.tinyclockin.util.StringUtil;
+import org.teknux.tinyclockin.util.MD5Util;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class StoreServiceImpl implements IStoreService {
 
         synchronized (tokenLock) {
             final AuthToken authToken = new AuthToken();
-            authToken.setToken(StringUtil.toHexString(StringUtil.md5(userId)));
+            authToken.setToken(MD5Util.toHexString(MD5Util.md5(userId)));
             authToken.setEmail(userId);
             tokenStore.add(authToken);
             return authToken;
