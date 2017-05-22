@@ -22,7 +22,7 @@
 
 	<groupId>org.teknux</groupId>
 	<artifactId>tinyclockin-core</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<name>tinyclockin-core</name>
 
 	<build>
@@ -61,6 +61,19 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>io.repaint.maven</groupId>
+				<artifactId>tiles-maven-plugin</artifactId>
+				<version>2.8</version>
+				<extensions>true</extensions>
+				<configuration>
+					<tiles>
+						<tile>org.avaje.tile:java-compile:1.1</tile>
+						<tile>io.ebean.tile:enhancement:2.7</tile>
+					</tiles>
+				</configuration>
 			</plugin>
 
 			<!-- Embedded all dependencies (fat JAR) -->
@@ -260,6 +273,36 @@
 			<artifactId>config-magic</artifactId>
 			<version>${config-magic.version}</version>
 		</dependency>
+
+		<!-- Persistence -->
+		<dependency>
+			<groupId>io.ebean</groupId>
+			<artifactId>ebean</artifactId>
+			<version>${ebean.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ebean</groupId>
+			<artifactId>ebean-querybean</artifactId>
+			<version>${ebean.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.ebean</groupId>
+			<artifactId>querybean-generator</artifactId>
+			<version>${ebean.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ebean</groupId>
+			<artifactId>ebean-querybean</artifactId>
+			<version>${ebean.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<properties>
@@ -280,6 +323,8 @@
 		<janino.version>2.6.1</janino.version>
 		<jersey.version>2.25.1</jersey.version>
 		<config-magic.version>0.17</config-magic.version>
+		<ebean.version>10.2.1</ebean.version>
+		<h2.version>1.4.195</h2.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

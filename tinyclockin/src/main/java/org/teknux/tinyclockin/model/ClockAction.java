@@ -18,19 +18,49 @@
 
 package org.teknux.tinyclockin.model;
 
+
+import io.ebean.annotation.JsonIgnore;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.time.LocalDateTime;
 
 
 /**
  * @author Francois EYL
  */
+@Entity
+@Table(name = "Action")
 public class ClockAction {
 
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
     private Integer id;
+
+    @Column(name = "timestamp", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime timestamp;
+
+    @Column(name = "type", nullable = false)
     private int type;
+
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "workstation", nullable = false)
     private int workstation;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private AuthToken authToken;
 
     public ClockAction() {
     }
@@ -82,33 +112,11 @@ public class ClockAction {
         this.workstation = workstation;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        ClockAction that = (ClockAction) o;
-
-        if (type != that.type)
-            return false;
-        if (workstation != that.workstation)
-            return false;
-        if (id != null ? !id.equals(that.id) : that.id != null)
-            return false;
-        if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null)
-            return false;
-        return description != null ? description.equals(that.description) : that.description == null;
+    public AuthToken getAuthToken() {
+        return authToken;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
-        result = 31 * result + type;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + workstation;
-        return result;
+    public void setAuthToken(AuthToken authToken) {
+        this.authToken = authToken;
     }
 }

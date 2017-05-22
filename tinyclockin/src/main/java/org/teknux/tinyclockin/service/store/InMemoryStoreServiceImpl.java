@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author Francois EYL
  */
-public class InMemoryStoreServiceImpl implements IStoreService {
+public class InMemoryStoreServiceImpl extends AbstractStoreService {
 
     private AtomicInteger idsIndex = new AtomicInteger(0);
 
@@ -47,20 +47,18 @@ public class InMemoryStoreServiceImpl implements IStoreService {
     private final Object tokenLock = new Object();
 
     @Override
-    public AuthToken getOrCreateToken(final String userId) {
-        if (userId == null || userId.trim().isEmpty()) {
+    public AuthToken getOrCreateToken(final String email) {
+        if (email == null || email.trim().isEmpty()) {
             return null;
         }
 
-        final Optional<AuthToken> storedAuthToken = tokenStore.stream().filter(t -> t.getEmail().equals(userId)).findFirst();
+        final Optional<AuthToken> storedAuthToken = tokenStore.stream().filter(t -> t.getEmail().equals(email)).findFirst();
         if (storedAuthToken.isPresent()) {
             return storedAuthToken.get();
         }
 
         synchronized (tokenLock) {
-            final AuthToken authToken = new AuthToken();
-            authToken.setToken(MD5Util.toHexString(MD5Util.md5(userId)));
-            authToken.setEmail(userId);
+            final AuthToken authToken = this.newAuthToken(email);
             tokenStore.add(authToken);
             return authToken;
         }
@@ -78,24 +76,24 @@ public class InMemoryStoreServiceImpl implements IStoreService {
     }
 
     @Override
-    public List<ClockAction> getActions(final String userId) {
-        return actionStore.getOrDefault(userId, new ArrayList<>());
+    public List<ClockAction> getActions(final String email) {
+        return actionStore.getOrDefault(email, new ArrayList<>());
     }
 
     @Override
-    public ClockAction getLastAction(final String userId) {
-        return getActions(userId).stream().reduce((first, second) -> second).orElse(null);
+    public ClockAction getLastAction(final String email) {
+        return getActions(email).stream().reduce((first, second) -> second).orElse(null);
     }
 
     @Override
-    public ClockAction storeAction(final String userId, final ClockAction action) {
+    public ClockAction storeAction(final String email, final ClockAction action) {
         action.setTimestamp(LocalDateTime.now());
         action.setId(idsIndex.incrementAndGet());
 
-        final List<ClockAction> actions = actionStore.getOrDefault(userId, new ArrayList<>());
+        final List<ClockAction> actions = actionStore.getOrDefault(email, new ArrayList<>());
         actions.add(action);
 
-        actionStore.put(userId, actions);
+        actionStore.put(email, actions);
         return action;
     }
 

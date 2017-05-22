@@ -18,13 +18,39 @@
 
 package org.teknux.tinyclockin.model;
 
+import io.ebean.annotation.JsonIgnore;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.List;
+
+
 /**
  * @author Francois EYL
  */
+@Entity
+@Table(name = "User")
 public class AuthToken {
 
+    @JsonIgnore
+    @Id
+    @Column(unique = true, nullable = false)
+    private Integer id;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String token;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "authToken", cascade = { CascadeType.ALL })
+    private List<ClockAction> clockActions;
 
     public String getEmail() {
         return email;
@@ -42,24 +68,19 @@ public class AuthToken {
         this.token = token;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        AuthToken authToken = (AuthToken) o;
-
-        if (email != null ? !email.equals(authToken.email) : authToken.email != null)
-            return false;
-        return token != null ? token.equals(authToken.token) : authToken.token == null;
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        int result = email != null ? email.hashCode() : 0;
-        result = 31 * result + (token != null ? token.hashCode() : 0);
-        return result;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<ClockAction> getClockActions() {
+        return clockActions;
+    }
+
+    public void setClockActions(List<ClockAction> clockActions) {
+        this.clockActions = clockActions;
     }
 }

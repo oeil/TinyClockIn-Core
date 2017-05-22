@@ -30,15 +30,15 @@ import java.util.List;
  */
 public interface IStoreService extends IService  {
 
-    public AuthToken getOrCreateToken(String userId);
+    public AuthToken getOrCreateToken(String email);
 
     public AuthToken findToken(String tokenId);
 
     public boolean isTokenExist(String tokenId);
 
-    public List<ClockAction> getActions(String userId);
+    public List<ClockAction> getActions(String email);
 
-    public ClockAction getLastAction(String userId);
+    public ClockAction getLastAction(String email);
 
-    public ClockAction storeAction(String userId, ClockAction action);
+    public ClockAction storeAction(String email, ClockAction action);
 }

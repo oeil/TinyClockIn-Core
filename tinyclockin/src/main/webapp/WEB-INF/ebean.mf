@@ -1,0 +1,2 @@
+entity-packages: org.teknux.tinyclockin.model
+querybean-packages: org.teknux.tinyclockin
