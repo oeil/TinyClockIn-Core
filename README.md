@@ -5,6 +5,7 @@ Standalone application backend that exposes a RESTful API for a super easy clock
 
 ### Authenticate User
 > POST api/auth/
+
 Retrives an authorization Token.
 
 Request Body (JSON)
@@ -63,6 +64,7 @@ Response Body (JSON)
 
 ### Retrieve All Actions (secured)
 > GET api/actions
+
 Returns all previous actions performed (for signed user).
 
 Response Body (JSON)
@@ -85,6 +87,7 @@ Response Body (JSON)
 
 ### Retrieve Latest Action (secured)
 > GET api/actions?latestOnly=true
+
 Returns only the last action performed by user.
 
 Response Body (JSON)
