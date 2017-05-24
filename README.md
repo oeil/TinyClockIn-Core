@@ -100,3 +100,14 @@ Response Body (JSON)
   “workstation”: 101
 }]
 ```
+
+## Build Project
+```
+mvn clean package
+```
+
+## Run Application
+```
+java -jar tinyclockin-core-VERSION.jar
+```
+> Note: config.properties file must exist next to the JAR file.
