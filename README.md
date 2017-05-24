@@ -110,4 +110,4 @@ mvn clean package
 ```
 java -jar tinyclockin-core-VERSION.jar
 ```
-> Note: config.properties file must exist next to the JAR file.
+> Note: config.properties file must exist next to the JAR file, a default config file will be generated otherwise.
