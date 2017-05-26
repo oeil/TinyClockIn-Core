@@ -22,7 +22,6 @@ import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.IServiceManager;
 import org.teknux.tinyclockin.service.ServiceException;
-import org.teknux.tinyclockin.util.MD5Util;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author Francois EYL
  */
-public class InMemoryStoreServiceImpl extends AbstractStoreService {
+public class InMemoryStoreServiceImpl implements IStoreService {
 
     private AtomicInteger idsIndex = new AtomicInteger(0);
 

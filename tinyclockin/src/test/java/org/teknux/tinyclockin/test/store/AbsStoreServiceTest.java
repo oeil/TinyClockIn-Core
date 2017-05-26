@@ -15,11 +15,20 @@ import java.util.List;
  */
 public abstract class AbsStoreServiceTest {
 
-    abstract protected IStoreService createStorageInstance();
+    private IStoreService storeService;
+
+    protected IStoreService getStoreServiceInstance() {
+        if (storeService == null) {
+            storeService = createStoreServiceInstance();
+        }
+        return storeService;
+    }
+
+    protected abstract IStoreService createStoreServiceInstance();
 
     @Test
     public void getOrCreateToken() {
-        final IStoreService storeService = createStorageInstance();
+        final IStoreService storeService = getStoreServiceInstance();
 
         Assert.assertNull(storeService.getOrCreateToken(null));
         Assert.assertNull(storeService.getOrCreateToken(""));
@@ -43,7 +52,7 @@ public abstract class AbsStoreServiceTest {
 
     @Test
     public void findToken() {
-        final IStoreService storeService = createStorageInstance();
+        final IStoreService storeService = getStoreServiceInstance();
 
         final String userId1 = "test.user1@test.org";
         final AuthToken userAuthToken1 = storeService.getOrCreateToken(userId1);
@@ -62,7 +71,7 @@ public abstract class AbsStoreServiceTest {
 
     @Test
     public void isTokenExist() {
-        final IStoreService storeService = createStorageInstance();
+        final IStoreService storeService = getStoreServiceInstance();
 
         final String userId1 = "test.user1@test.org";
         final AuthToken userAuthToken1 = storeService.getOrCreateToken(userId1);
@@ -81,7 +90,7 @@ public abstract class AbsStoreServiceTest {
 
     @Test
     public void storeAction() {
-        final IStoreService storeService = createStorageInstance();
+        final IStoreService storeService = getStoreServiceInstance();
 
         final String userId1 = "test.user1@test.org";
         final AuthToken userAuthToken1 = storeService.getOrCreateToken(userId1);
@@ -120,7 +129,7 @@ public abstract class AbsStoreServiceTest {
 
     @Test
     public void getLastAction() {
-        final IStoreService storeService = createStorageInstance();
+        final IStoreService storeService = getStoreServiceInstance();
 
         final String userId1 = "test.user1@test.org";
         storeService.getOrCreateToken(userId1);
@@ -146,7 +155,7 @@ public abstract class AbsStoreServiceTest {
 
     @Test
     public void getActions() {
-        final IStoreService storeService = createStorageInstance();
+        final IStoreService storeService = getStoreServiceInstance();
 
         Assert.assertNotNull(storeService.getActions("test.unknown@test.org"));
         Assert.assertTrue(storeService.getActions("test.unknown@test.org").isEmpty());

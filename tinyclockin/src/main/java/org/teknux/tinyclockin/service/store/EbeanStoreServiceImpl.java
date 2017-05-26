@@ -1,6 +1,10 @@
 package org.teknux.tinyclockin.service.store;
 
 import io.ebean.Ebean;
+import io.ebean.EbeanServerFactory;
+import io.ebean.config.DbMigrationConfig;
+import io.ebean.config.ServerConfig;
+import org.avaje.datasource.DataSourceConfig;
 import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.model.query.QAuthToken;
@@ -15,11 +19,14 @@ import java.util.List;
 /**
  * @author Francois EYL
  */
-public class EbeanStoreServiceImpl extends AbstractStoreService {
+public class EbeanStoreServiceImpl implements IStoreService {
 
     @Override
     public void start(IServiceManager serviceManager) throws ServiceException {
-        //read ebean config & create server
+        //read ebean config & create server & migrate database when necessary
+        final DataSourceConfig dataSourceConfig = EbeanStoreServiceImpl.DatasourceConfigFactory.createFile();
+        final ServerConfig serverConfig = EbeanStoreServiceImpl.ServerConfigFactory.build(dataSourceConfig, false);
+        EbeanServerFactory.create(serverConfig);
     }
 
     @Override
@@ -33,10 +40,7 @@ public class EbeanStoreServiceImpl extends AbstractStoreService {
             return null;
         }
 
-        AuthToken token = new QAuthToken()
-                .email
-                .eq(email)
-                .findUnique();
+        AuthToken token = new QAuthToken().email.eq(email).findUnique();
 
         if (token != null) {
             return token;
@@ -97,5 +101,67 @@ public class EbeanStoreServiceImpl extends AbstractStoreService {
         Ebean.save(token);
 
         return action;
+    }
+
+    /**
+     * @author Francois EYL
+     */
+    public static final class DatasourceConfigFactory {
+
+        private static final String DRIVER = "org.h2.Driver";
+        private static final String URL_MEM = "jdbc:h2:mem:tests;DB_CLOSE_DELAY=0";
+        private static final String URL_FILE = "jdbc:h2:~/database;AUTO_SERVER=TRUE";
+        private static final String DEFAULT_USER = "sa";
+        private static final String DEFAULT_PWD = "";
+        private static final String HEARTBEAT_SQL = "select 1";
+
+        private DatasourceConfigFactory() {
+        }
+
+        private static DataSourceConfig create() {
+            final DataSourceConfig datasource = new DataSourceConfig();
+            datasource.setDriver(DRIVER);
+            datasource.setUsername(DEFAULT_USER);
+            datasource.setPassword(DEFAULT_PWD);
+            datasource.setHeartbeatSql(HEARTBEAT_SQL);
+            return datasource;
+        }
+
+        public static DataSourceConfig createFile() {
+            final DataSourceConfig datasource = create();
+            datasource.setUrl(URL_FILE);
+            return datasource;
+        }
+
+        public static DataSourceConfig createInMemory() {
+            final DataSourceConfig datasource = create();
+            datasource.setUrl(URL_MEM);
+            return datasource;
+        }
+    }
+
+    public static final class ServerConfigFactory {
+
+        private ServerConfigFactory() {
+        }
+
+        public static ServerConfig build(final DataSourceConfig dataSourceConfig, final boolean runMigration) {
+            ServerConfig serverConfig = new ServerConfig();
+            serverConfig.setName("db");
+
+            serverConfig.loadFromProperties();
+            serverConfig.setDdlRun(false);
+            serverConfig.setDdlGenerate(false);
+
+            DbMigrationConfig dbMigrationConfig = serverConfig.getMigrationConfig();
+            dbMigrationConfig.setRunMigration(runMigration);
+            serverConfig.setMigrationConfig(dbMigrationConfig);
+
+            serverConfig.setDefaultServer(true);
+            serverConfig.setRegister(true);
+            serverConfig.setDataSourceConfig(dataSourceConfig);
+
+            return serverConfig;
+        }
     }
 }

@@ -1,14 +1,7 @@
 package org.teknux.tinyclockin.test.store;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.teknux.tinyclockin.model.AuthToken;
-import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.store.IStoreService;
 import org.teknux.tinyclockin.service.store.InMemoryStoreServiceImpl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -19,7 +12,7 @@ import java.util.List;
 public class InMemoryStoreServiceTest extends AbsStoreServiceTest {
 
     @Override
-    protected IStoreService createStorageInstance() {
+    protected IStoreService createStoreServiceInstance() {
         return new InMemoryStoreServiceImpl();
     }
 }

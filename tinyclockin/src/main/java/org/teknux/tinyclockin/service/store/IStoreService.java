@@ -21,6 +21,7 @@ package org.teknux.tinyclockin.service.store;
 import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.IService;
+import org.teknux.tinyclockin.util.MD5Util;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
 /**
  * @author Francois EYL
  */
-public interface IStoreService extends IService  {
+public interface IStoreService extends IService {
 
     public AuthToken getOrCreateToken(String email);
 
@@ -41,4 +42,11 @@ public interface IStoreService extends IService  {
     public ClockAction getLastAction(String email);
 
     public ClockAction storeAction(String email, ClockAction action);
+
+    default public AuthToken newAuthToken(String email) {
+        final AuthToken authToken = new AuthToken();
+        authToken.setToken(MD5Util.toHexString(MD5Util.md5(email)));
+        authToken.setEmail(email);
+        return authToken;
+    }
 }

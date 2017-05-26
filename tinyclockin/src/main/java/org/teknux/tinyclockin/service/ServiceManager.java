@@ -51,6 +51,7 @@ public class ServiceManager implements IServiceManager {
 
         services.put(IConfigurationService.class, new ConfigurationServiceImpl());
         services.put(IStoreService.class, new InMemoryStoreServiceImpl());
+        //services.put(IStoreService.class, new EbeanStoreServiceImpl());
     }
 
     public static IServiceManager get(ServletContext context) {
