@@ -1,7 +1,6 @@
 package org.teknux.tinyclockin.service.store;
 
 import io.ebean.Ebean;
-import io.ebean.EbeanServer;
 import io.ebean.EbeanServerFactory;
 import io.ebean.config.DbMigrationConfig;
 import io.ebean.config.ServerConfig;
@@ -12,6 +11,7 @@ import org.teknux.tinyclockin.model.query.QAuthToken;
 import org.teknux.tinyclockin.model.query.QClockAction;
 import org.teknux.tinyclockin.service.IServiceManager;
 import org.teknux.tinyclockin.service.ServiceException;
+import org.teknux.tinyclockin.service.configuration.IConfigurationService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,8 +24,10 @@ public class EbeanStoreServiceImpl implements IStoreService {
 
     @Override
     public void start(IServiceManager serviceManager) throws ServiceException {
+        final String dbFilePath = serviceManager.getService(IConfigurationService.class).getConfiguration().getDatabaseFilePath();
+
         //read ebean config & create server & migrate database when necessary
-        final DataSourceConfig dataSourceConfig = EbeanStoreServiceImpl.DatasourceConfigFactory.create(false);
+        final DataSourceConfig dataSourceConfig = DatasourceConfigFactory.get().setMemoryDb(false).setDbFilePath(dbFilePath).build();
         final ServerConfig serverConfig = EbeanStoreServiceImpl.ServerConfigFactory.build(dataSourceConfig, true);
         serverConfig.setH2ProductionMode(true);
 
@@ -113,22 +115,41 @@ public class EbeanStoreServiceImpl implements IStoreService {
 
         private static final String DRIVER = "org.h2.Driver";
         private static final String URL_MEM = "jdbc:h2:mem:tests;DB_CLOSE_DELAY=0";
-        private static final String URL_FILE = "jdbc:h2:~/database;AUTO_SERVER=TRUE";
+        private static final String URL_FILE = "jdbc:h2:%s;AUTO_SERVER=TRUE";
         private static final String DEFAULT_USER = "sa";
         private static final String DEFAULT_PWD = "";
         private static final String HEARTBEAT_SQL = "select 1";
 
+        private String dbFilePath;
+        private boolean inMemory;
+
         private DatasourceConfigFactory() {
+            dbFilePath = "~/database";
+            inMemory = true;
         }
 
-        public static DataSourceConfig create(final boolean inMemory) {
+        public static DatasourceConfigFactory get() {
+            return new DatasourceConfigFactory();
+        }
+
+        public DataSourceConfig build() {
             final DataSourceConfig datasource = new DataSourceConfig();
             datasource.setDriver(DRIVER);
             datasource.setUsername(DEFAULT_USER);
             datasource.setPassword(DEFAULT_PWD);
             datasource.setHeartbeatSql(HEARTBEAT_SQL);
-            datasource.setUrl(inMemory ? URL_MEM : URL_FILE);
+            datasource.setUrl(inMemory ? URL_MEM : String.format(URL_FILE, dbFilePath));
             return datasource;
+        }
+
+        public DatasourceConfigFactory setDbFilePath(String path) {
+            this.dbFilePath = path;
+            return this;
+        }
+
+        public DatasourceConfigFactory setMemoryDb(boolean isMemory) {
+            this.inMemory = isMemory;
+            return this;
         }
     }
 

@@ -16,7 +16,7 @@ public class EbeanStoreServiceTest extends AbsStoreServiceTest {
     @Before
     public void setup() {
         //force to generate and apply DDL to in-memory database
-        final DataSourceConfig dataSourceConfig = EbeanStoreServiceImpl.DatasourceConfigFactory.create(true);
+        final DataSourceConfig dataSourceConfig = EbeanStoreServiceImpl.DatasourceConfigFactory.get().build();
         final ServerConfig serverConfig = EbeanStoreServiceImpl.ServerConfigFactory.build(dataSourceConfig, false);
         serverConfig.setH2ProductionMode(false);
         EbeanServerFactory.create(serverConfig);

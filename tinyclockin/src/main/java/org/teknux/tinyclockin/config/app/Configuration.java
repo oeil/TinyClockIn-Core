@@ -35,4 +35,8 @@ public interface Configuration {
     @Config("port")
     @Default("8080")
     int getPort();
+
+    @Config("database.file.path")
+    @Default("~/database")
+    String getDatabaseFilePath();
 }

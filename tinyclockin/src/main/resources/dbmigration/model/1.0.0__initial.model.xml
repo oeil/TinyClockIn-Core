@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE xml>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="user" pkName="pk_user">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="email" type="varchar" notnull="true" unique="uq_user_email"/>
+            <column name="token" type="varchar" notnull="true"/>
+        </createTable>
+        <createTable name="action" pkName="pk_action">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="timestamp" type="timestamp" notnull="true"/>
+            <column name="type" type="integer" notnull="true"/>
+            <column name="description" type="varchar" notnull="true"/>
+            <column name="workstation" type="integer" notnull="true"/>
+            <column name="user_id" type="integer" references="user.id" foreignKeyName="fk_action_user_id" foreignKeyIndex="ix_action_user_id"/>
+        </createTable>
+    </changeSet>
+</migration>
