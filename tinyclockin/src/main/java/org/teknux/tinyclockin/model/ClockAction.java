@@ -18,9 +18,6 @@
 
 package org.teknux.tinyclockin.model;
 
-
-import io.ebean.annotation.JsonIgnore;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +27,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlTransient;
 import java.time.LocalDateTime;
 
 
@@ -37,7 +35,7 @@ import java.time.LocalDateTime;
  * @author Francois EYL
  */
 @Entity
-@Table(name = "Action")
+@Table(name = "action")
 public class ClockAction {
 
     @Id
@@ -57,9 +55,8 @@ public class ClockAction {
     @Column(name = "workstation", nullable = false)
     private int workstation;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private AuthToken authToken;
 
     public ClockAction() {
@@ -72,6 +69,7 @@ public class ClockAction {
         this.workstation = workstation;
     }
 
+    @XmlTransient
     public Integer getId() {
         return id;
     }
@@ -112,6 +110,7 @@ public class ClockAction {
         this.workstation = workstation;
     }
 
+    @XmlTransient
     public AuthToken getAuthToken() {
         return authToken;
     }

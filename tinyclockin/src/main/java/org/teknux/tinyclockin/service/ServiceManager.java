@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.teknux.tinyclockin.AppServlet;
 import org.teknux.tinyclockin.service.configuration.ConfigurationServiceImpl;
 import org.teknux.tinyclockin.service.configuration.IConfigurationService;
+import org.teknux.tinyclockin.service.store.EbeanStoreServiceImpl;
 import org.teknux.tinyclockin.service.store.IStoreService;
-import org.teknux.tinyclockin.service.store.InMemoryStoreServiceImpl;
 
 import javax.servlet.ServletContext;
 import java.util.LinkedHashMap;
@@ -50,8 +50,7 @@ public class ServiceManager implements IServiceManager {
         this.servletContext = context;
 
         services.put(IConfigurationService.class, new ConfigurationServiceImpl());
-        services.put(IStoreService.class, new InMemoryStoreServiceImpl());
-        //services.put(IStoreService.class, new EbeanStoreServiceImpl());
+        services.put(IStoreService.class, new EbeanStoreServiceImpl());
     }
 
     public static IServiceManager get(ServletContext context) {

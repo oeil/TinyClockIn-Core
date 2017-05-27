@@ -1,6 +1,7 @@
 package org.teknux.tinyclockin.service.store;
 
 import io.ebean.Ebean;
+import io.ebean.EbeanServer;
 import io.ebean.EbeanServerFactory;
 import io.ebean.config.DbMigrationConfig;
 import io.ebean.config.ServerConfig;
@@ -24,8 +25,10 @@ public class EbeanStoreServiceImpl implements IStoreService {
     @Override
     public void start(IServiceManager serviceManager) throws ServiceException {
         //read ebean config & create server & migrate database when necessary
-        final DataSourceConfig dataSourceConfig = EbeanStoreServiceImpl.DatasourceConfigFactory.createFile();
-        final ServerConfig serverConfig = EbeanStoreServiceImpl.ServerConfigFactory.build(dataSourceConfig, false);
+        final DataSourceConfig dataSourceConfig = EbeanStoreServiceImpl.DatasourceConfigFactory.create(false);
+        final ServerConfig serverConfig = EbeanStoreServiceImpl.ServerConfigFactory.build(dataSourceConfig, true);
+        serverConfig.setH2ProductionMode(true);
+
         EbeanServerFactory.create(serverConfig);
     }
 
@@ -118,24 +121,13 @@ public class EbeanStoreServiceImpl implements IStoreService {
         private DatasourceConfigFactory() {
         }
 
-        private static DataSourceConfig create() {
+        public static DataSourceConfig create(final boolean inMemory) {
             final DataSourceConfig datasource = new DataSourceConfig();
             datasource.setDriver(DRIVER);
             datasource.setUsername(DEFAULT_USER);
             datasource.setPassword(DEFAULT_PWD);
             datasource.setHeartbeatSql(HEARTBEAT_SQL);
-            return datasource;
-        }
-
-        public static DataSourceConfig createFile() {
-            final DataSourceConfig datasource = create();
-            datasource.setUrl(URL_FILE);
-            return datasource;
-        }
-
-        public static DataSourceConfig createInMemory() {
-            final DataSourceConfig datasource = create();
-            datasource.setUrl(URL_MEM);
+            datasource.setUrl(inMemory ? URL_MEM : URL_FILE);
             return datasource;
         }
     }
@@ -152,6 +144,7 @@ public class EbeanStoreServiceImpl implements IStoreService {
             serverConfig.loadFromProperties();
             serverConfig.setDdlRun(false);
             serverConfig.setDdlGenerate(false);
+            serverConfig.setDdlCreateOnly(false);
 
             DbMigrationConfig dbMigrationConfig = serverConfig.getMigrationConfig();
             dbMigrationConfig.setRunMigration(runMigration);

@@ -18,8 +18,6 @@
 
 package org.teknux.tinyclockin.model;
 
-import io.ebean.annotation.JsonIgnore;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +25,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 
@@ -34,10 +33,9 @@ import java.util.List;
  * @author Francois EYL
  */
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class AuthToken {
 
-    @JsonIgnore
     @Id
     @Column(unique = true, nullable = false)
     private Integer id;
@@ -48,7 +46,6 @@ public class AuthToken {
     @Column(nullable = false)
     private String token;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "authToken", cascade = { CascadeType.ALL })
     private List<ClockAction> clockActions;
 
@@ -68,6 +65,7 @@ public class AuthToken {
         this.token = token;
     }
 
+    @XmlTransient
     public Integer getId() {
         return id;
     }
@@ -76,6 +74,7 @@ public class AuthToken {
         this.id = id;
     }
 
+    @XmlTransient
     public List<ClockAction> getClockActions() {
         return clockActions;
     }
