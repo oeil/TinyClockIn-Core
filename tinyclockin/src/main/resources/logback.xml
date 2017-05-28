@@ -55,6 +55,11 @@
     <logger name="org.skife.config" level="WARN" />
     <logger name="org.teknux.jettybootstrap" level="WARN" />
 
+    <logger name="io.ebean.SQL" level="${log.level}"/>
+    <logger name="io.ebean.TXN" level="${log.level}"/>
+    <logger name="io.ebean.SUM" level="${log.level}"/>
+    <logger name="io.ebean.DDL" level="${log.level}"/>
+
     <root level="${logback.level.root}">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />

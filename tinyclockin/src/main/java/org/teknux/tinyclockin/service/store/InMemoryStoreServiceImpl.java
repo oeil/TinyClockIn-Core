@@ -35,6 +35,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
+ * Homemade In-Memory store implementation
+ *
  * @author Francois EYL
  */
 public class InMemoryStoreServiceImpl implements IStoreService {

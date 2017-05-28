@@ -18,6 +18,8 @@
 
 package org.teknux.tinyclockin.model;
 
+import org.teknux.tinyclockin.config.app.LocalDateTimeAdapter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +30,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
 
 
@@ -78,6 +81,7 @@ public class ClockAction {
         this.id = id;
     }
 
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     public LocalDateTime getTimestamp() {
         return timestamp;
     }

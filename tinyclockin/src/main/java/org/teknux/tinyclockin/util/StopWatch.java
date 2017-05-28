@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 
 
 /**
+ * Simple stopwatch object
+ *
  * @author Francois EYL
  */
 public class StopWatch {

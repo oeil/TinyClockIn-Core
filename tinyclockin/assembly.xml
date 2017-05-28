@@ -41,7 +41,7 @@
         </file>
         <file>
             <outputDirectory></outputDirectory>
-            <source>${basedir}/src/main/resources/run.sh</source>
+            <source>${basedir}/src/main/resources/run</source>
             <filtered>true</filtered>
             <fileMode>0755</fileMode>
         </file>

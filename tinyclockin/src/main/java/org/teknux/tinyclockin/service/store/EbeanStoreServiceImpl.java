@@ -14,10 +14,13 @@ import org.teknux.tinyclockin.service.ServiceException;
 import org.teknux.tinyclockin.service.configuration.IConfigurationService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
 /**
+ * The ebean store implementation.
+ *
  * @author Francois EYL
  */
 public class EbeanStoreServiceImpl implements IStoreService {
@@ -29,8 +32,14 @@ public class EbeanStoreServiceImpl implements IStoreService {
         //read ebean config & create server & migrate database when necessary
         final DataSourceConfig dataSourceConfig = DatasourceConfigFactory.get().setMemoryDb(false).setDbFilePath(dbFilePath).build();
         final ServerConfig serverConfig = EbeanStoreServiceImpl.ServerConfigFactory.build(dataSourceConfig, true);
-        serverConfig.setH2ProductionMode(true);
+        serverConfig.setH2ProductionMode(true); //specifically tells ebean to avoid in-memory H2 db
 
+        //manually register Entities Package for the runnable Fat JAR/WAR (ebean search classpath issue)
+        List<String> packages = new ArrayList<>();
+        packages.add(ClockAction.class.getPackage().getName());
+        serverConfig.setPackages(packages);
+
+        //builds the server and runs db migration
         EbeanServerFactory.create(serverConfig);
     }
 

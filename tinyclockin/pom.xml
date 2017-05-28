@@ -22,7 +22,7 @@
 
 	<groupId>org.teknux</groupId>
 	<artifactId>tinyclockin-core</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.0</version>
 	<name>tinyclockin-core</name>
 
 	<build>
@@ -52,6 +52,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19.1</version>
+				<configuration>
+					<!-- Fix Maven not finding Ebean test classes. -->
+					<useSystemClassLoader>false</useSystemClassLoader>
+				</configuration>
 				<executions>
 					<execution>
 						<id>default-test</id>
@@ -64,7 +68,7 @@
 			</plugin>
 
 			<!-- Embedded all dependencies (fat JAR) -->
-			<!--<plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>${maven-shade.version}</version>
@@ -79,7 +83,7 @@
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>org.teknux.feudboard.Main</Main-Class>
+										<Main-Class>org.teknux.tinyclockin.Main</Main-Class>
 									</manifestEntries>
 								</transformer>
 							</transformers>
@@ -96,9 +100,9 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>-->
+			</plugin>
 
-			<!-- No Fat JAR, all dependencies in a directory named libs -->
+			<!-- No Fat JAR, all dependencies in a directory named libs
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -133,6 +137,7 @@
 					<outputDirectory>${basedir}/target/lib/</outputDirectory>
 				</configuration>
 			</plugin>
+			-->
 
 			<!-- make the final zip file -->
 			<plugin>
@@ -241,18 +246,18 @@
 			<artifactId>jersey-container-servlet</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
-		<!--
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
             <version>${jersey.version}</version>
         </dependency>
-        -->
+        <!--
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-moxy</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
+		-->
 
 		<!-- Config -->
 		<dependency>
@@ -261,18 +266,23 @@
 			<version>${config-magic.version}</version>
 		</dependency>
 
-		<!-- Persistence -->
+		<!-- ORM -->
 		<dependency>
 			<groupId>io.ebean</groupId>
 			<artifactId>ebean</artifactId>
 			<version>10.2.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>io.ebean</groupId>
 			<artifactId>ebean-querybean</artifactId>
 			<version>${ebean.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.ebean</groupId>
 			<artifactId>querybean-generator</artifactId>
@@ -280,6 +290,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- H2 database -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

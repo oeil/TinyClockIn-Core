@@ -27,23 +27,25 @@ import java.util.List;
 
 
 /**
+ * Defines the api contract for the application store
+ *
  * @author Francois EYL
  */
 public interface IStoreService extends IService {
 
-    public AuthToken getOrCreateToken(String email);
+    AuthToken getOrCreateToken(String email);
 
-    public AuthToken findToken(String tokenId);
+    AuthToken findToken(String tokenId);
 
-    public boolean isTokenExist(String tokenId);
+    boolean isTokenExist(String tokenId);
 
-    public List<ClockAction> getActions(String email);
+    List<ClockAction> getActions(String email);
 
-    public ClockAction getLastAction(String email);
+    ClockAction getLastAction(String email);
 
-    public ClockAction storeAction(String email, ClockAction action);
+    ClockAction storeAction(String email, ClockAction action);
 
-    default public AuthToken newAuthToken(String email) {
+    default AuthToken newAuthToken(String email) {
         final AuthToken authToken = new AuthToken();
         authToken.setToken(MD5Util.toHexString(MD5Util.md5(email)));
         authToken.setEmail(email);

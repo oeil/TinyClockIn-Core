@@ -25,6 +25,8 @@ import java.security.NoSuchAlgorithmException;
 
 
 /**
+ * Utilities for md5 generation
+ *
  * @author Francois EYL
  */
 public class MD5Util {
