@@ -21,6 +21,7 @@ package org.teknux.tinyclockin.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teknux.tinyclockin.controller.security.Secured;
+import org.teknux.tinyclockin.model.Audit;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.IServiceManager;
 import org.teknux.tinyclockin.service.ServiceManager;
@@ -29,6 +30,7 @@ import org.teknux.tinyclockin.util.StopWatch;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -66,10 +68,13 @@ public class ActionsController {
     }
 
     @GET
-    public List<ClockAction> actions(@QueryParam("latestOnly") Boolean latestOnly) {
+    public List<ClockAction> actions(@QueryParam("latestOnly") Boolean latestOnly, @Context HttpServletRequest requestContext) {
         final StopWatch stopWatch = StopWatch.get();
 
         final String email = securityContext.getUserPrincipal().getName();
+
+        final Audit audit = Audit.create(email, Audit.Type.HTTP_GET, "api/actions" + (Boolean.TRUE.equals(latestOnly) ? "?lastestOnly=true" : ""), requestContext.getRemoteAddr());
+        getServiceManager().getService(IStoreService.class).audit(audit);
 
         List<ClockAction> actionsToReturn = null;
         if (Boolean.TRUE.equals(latestOnly)) {
@@ -81,15 +86,19 @@ public class ActionsController {
         } else {
             actionsToReturn = getServiceManager().getService(IStoreService.class).getActions(email);
         }
+
         logger.debug("GET /api/actions [{} items] [{} sec]", actionsToReturn.size(), stopWatch.stop().getSeconds());
         return actionsToReturn;
     }
 
     @POST
-    public Response doAction(ClockAction action) {
+    public Response doAction(ClockAction action, @Context HttpServletRequest requestContext) {
         final StopWatch stopWatch = StopWatch.get();
 
         final String email = securityContext.getUserPrincipal().getName();
+
+        final Audit audit = Audit.create(email, Audit.Type.HTTP_POST, "api/actions", requestContext.getRemoteAddr());
+        getServiceManager().getService(IStoreService.class).audit(audit);
 
         Response errRsp = validateAction(action, email);
         if (errRsp != null) {

@@ -5,8 +5,10 @@ import io.ebean.EbeanServerFactory;
 import io.ebean.config.DbMigrationConfig;
 import io.ebean.config.ServerConfig;
 import org.avaje.datasource.DataSourceConfig;
+import org.teknux.tinyclockin.model.Audit;
 import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
+import org.teknux.tinyclockin.model.query.QAudit;
 import org.teknux.tinyclockin.model.query.QAuthToken;
 import org.teknux.tinyclockin.model.query.QClockAction;
 import org.teknux.tinyclockin.service.IServiceManager;
@@ -115,6 +117,22 @@ public class EbeanStoreServiceImpl implements IStoreService {
         Ebean.save(token);
 
         return action;
+    }
+
+    @Override
+    public Audit audit(Audit audit) {
+        if (audit == null) {
+            return null;
+        }
+
+        audit.setTimestamp(LocalDateTime.now());
+        Ebean.save(audit);
+        return audit;
+    }
+
+    @Override
+    public List<Audit> getAudits() {
+        return new QAudit().findList();
     }
 
     /**

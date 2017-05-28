@@ -2,6 +2,7 @@ package org.teknux.tinyclockin.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.tinyclockin.model.Audit;
 import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.service.IServiceManager;
 import org.teknux.tinyclockin.service.ServiceManager;
@@ -49,8 +50,11 @@ public class AuthController {
      * @return
      */
     @POST
-    public Response getOrCreateToken(final AuthToken authToken) {
+    public Response getOrCreateToken(final AuthToken authToken, @Context HttpServletRequest requestContext) {
         final StopWatch stopWatch = StopWatch.get();
+
+        final Audit audit = Audit.create(authToken == null ? null : authToken.getEmail(), Audit.Type.HTTP_POST, "api/auth", requestContext.getRemoteAddr());
+        getServiceManager().getService(IStoreService.class).audit(audit);
 
         if (authToken == null || authToken.getEmail() == null || authToken.getEmail().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid input! User Id must be given.").type(MediaType.TEXT_PLAIN).build();

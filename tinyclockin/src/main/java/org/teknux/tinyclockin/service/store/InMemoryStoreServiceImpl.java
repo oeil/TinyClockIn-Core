@@ -18,6 +18,7 @@
 
 package org.teknux.tinyclockin.service.store;
 
+import org.teknux.tinyclockin.model.Audit;
 import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.IServiceManager;
@@ -45,6 +46,7 @@ public class InMemoryStoreServiceImpl implements IStoreService {
 
     private final Map<String, List<ClockAction>> actionStore = new ConcurrentHashMap<>();
     private final Set<AuthToken> tokenStore = new HashSet<>();
+    private final List<Audit> audits = new ArrayList<>();
     private final Object tokenLock = new Object();
 
     @Override
@@ -96,6 +98,17 @@ public class InMemoryStoreServiceImpl implements IStoreService {
 
         actionStore.put(email, actions);
         return action;
+    }
+
+    @Override
+    public Audit audit(Audit audit) {
+        audits.add(audit);
+        return audit;
+    }
+
+    @Override
+    public List<Audit> getAudits() {
+        return audits;
     }
 
     @Override

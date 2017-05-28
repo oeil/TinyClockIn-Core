@@ -18,6 +18,7 @@
 
 package org.teknux.tinyclockin.service.store;
 
+import org.teknux.tinyclockin.model.Audit;
 import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.IService;
@@ -44,6 +45,10 @@ public interface IStoreService extends IService {
     ClockAction getLastAction(String email);
 
     ClockAction storeAction(String email, ClockAction action);
+
+    Audit audit(Audit audit);
+
+    List<Audit> getAudits();
 
     default AuthToken newAuthToken(String email) {
         final AuthToken authToken = new AuthToken();

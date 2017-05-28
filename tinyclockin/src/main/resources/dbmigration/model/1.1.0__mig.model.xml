@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE xml>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="audit" pkName="pk_audit">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="timestamp" type="timestamp" notnull="true"/>
+            <column name="email" type="varchar"/>
+            <column name="type" type="varchar"/>
+            <column name="url" type="varchar"/>
+            <column name="ip" type="varchar"/>
+        </createTable>
+    </changeSet>
+</migration>

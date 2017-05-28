@@ -39,4 +39,8 @@ public interface Configuration {
     @Config("database.file.path")
     @Default("~/database")
     String getDatabaseFilePath();
+
+    @Config("admin.key")
+    @Default("admin")
+    String getAdminKey();
 }
