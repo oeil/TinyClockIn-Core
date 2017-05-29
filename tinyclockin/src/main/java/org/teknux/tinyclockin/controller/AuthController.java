@@ -54,7 +54,7 @@ public class AuthController {
         final StopWatch stopWatch = StopWatch.get();
 
         final Audit audit = Audit.create(authToken == null ? null : authToken.getEmail(), Audit.Type.HTTP_POST, "api/auth", requestContext.getRemoteAddr());
-        getServiceManager().getService(IStoreService.class).audit(audit);
+        getServiceManager().getService(IStoreService.class).storeAudit(audit);
 
         if (authToken == null || authToken.getEmail() == null || authToken.getEmail().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid input! User Id must be given.").type(MediaType.TEXT_PLAIN).build();

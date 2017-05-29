@@ -52,7 +52,7 @@ public class AuditController {
         final String email = securityContext.getUserPrincipal().getName();
 
         final Audit audit = Audit.create(email, Audit.Type.HTTP_GET, "api/audits", requestContext.getRemoteAddr());
-        getServiceManager().getService(IStoreService.class).audit(audit);
+        getServiceManager().getService(IStoreService.class).storeAudit(audit);
 
         final List<Audit> auditsToReturn = getServiceManager().getService(IStoreService.class).getAudits();
         logger.debug("GET /api/audits [{} items] [{} sec]", auditsToReturn.size(), stopWatch.stop().getSeconds());

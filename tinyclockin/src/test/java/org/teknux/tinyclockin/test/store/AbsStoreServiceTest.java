@@ -2,6 +2,7 @@ package org.teknux.tinyclockin.test.store;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.teknux.tinyclockin.model.Audit;
 import org.teknux.tinyclockin.model.AuthToken;
 import org.teknux.tinyclockin.model.ClockAction;
 import org.teknux.tinyclockin.service.store.IStoreService;
@@ -189,5 +190,40 @@ public abstract class AbsStoreServiceTest {
         Assert.assertEquals(user2Action1, user2ActionsFound.get(0));
         Assert.assertEquals(user2Action2, user2ActionsFound.get(1));
         Assert.assertEquals(user2Action3, user2ActionsFound.get(2));
+    }
+
+    @Test
+    public void storeAudit() {
+        final IStoreService storeService = getStoreServiceInstance();
+
+        Assert.assertNull(storeService.storeAudit(null));
+
+        final List<Audit> audits = new ArrayList<>();
+        for (int i = 0; i < 10 ; i++) {
+            audits.add(Audit.create("email"+i, "GET", "URL"+i, "ip"+i));
+            Assert.assertNotNull(storeService.storeAudit(audits.get(i)));
+            storeService.getAudits().get(i).equals(audits.get(i));
+
+            audits.add(Audit.create("email2"+i, "GET2", "URL2"+i, "ip2"+i));
+            Assert.assertNotNull(storeService.storeAudit(audits.get(i)));
+            storeService.getAudits().get(i).equals(audits.get(i));
+        }
+
+    }
+
+    @Test
+    public void getAudits() {
+        final int maxAuditRecords = 100;
+        final IStoreService storeService = getStoreServiceInstance();
+
+        Assert.assertTrue(storeService.getAudits().isEmpty());
+
+        final List<Audit> audits = new ArrayList<>();
+        for (int i = 0; i < maxAuditRecords ; i++) {
+            audits.add(Audit.create("email"+i, "GET", "URL"+i, "ip"+i));
+            Assert.assertNotNull(storeService.storeAudit(audits.get(i)));
+            storeService.getAudits().get(i).equals(audits.get(i));
+        }
+        Assert.assertEquals(storeService.getAudits().size(), maxAuditRecords);
     }
 }

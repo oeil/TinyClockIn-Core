@@ -101,7 +101,11 @@ public class InMemoryStoreServiceImpl implements IStoreService {
     }
 
     @Override
-    public Audit audit(Audit audit) {
+    public Audit storeAudit(Audit audit) {
+        if (audit == null) {
+            return null;
+        }
+
         audits.add(audit);
         return audit;
     }

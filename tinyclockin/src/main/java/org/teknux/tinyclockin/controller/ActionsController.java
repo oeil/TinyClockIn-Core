@@ -74,7 +74,7 @@ public class ActionsController {
         final String email = securityContext.getUserPrincipal().getName();
 
         final Audit audit = Audit.create(email, Audit.Type.HTTP_GET, "api/actions" + (Boolean.TRUE.equals(latestOnly) ? "?lastestOnly=true" : ""), requestContext.getRemoteAddr());
-        getServiceManager().getService(IStoreService.class).audit(audit);
+        getServiceManager().getService(IStoreService.class).storeAudit(audit);
 
         List<ClockAction> actionsToReturn = null;
         if (Boolean.TRUE.equals(latestOnly)) {
@@ -98,7 +98,7 @@ public class ActionsController {
         final String email = securityContext.getUserPrincipal().getName();
 
         final Audit audit = Audit.create(email, Audit.Type.HTTP_POST, "api/actions", requestContext.getRemoteAddr());
-        getServiceManager().getService(IStoreService.class).audit(audit);
+        getServiceManager().getService(IStoreService.class).storeAudit(audit);
 
         Response errRsp = validateAction(action, email);
         if (errRsp != null) {

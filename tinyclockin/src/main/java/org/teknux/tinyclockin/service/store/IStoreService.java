@@ -46,7 +46,7 @@ public interface IStoreService extends IService {
 
     ClockAction storeAction(String email, ClockAction action);
 
-    Audit audit(Audit audit);
+    Audit storeAudit(Audit audit);
 
     List<Audit> getAudits();
 

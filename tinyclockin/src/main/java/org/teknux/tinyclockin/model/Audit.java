@@ -88,12 +88,46 @@ public class Audit {
         this.ip = ip;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Audit audit = (Audit) o;
+
+        if (id != null ? !id.equals(audit.id) : audit.id != null)
+            return false;
+        if (timestamp != null ? !timestamp.equals(audit.timestamp) : audit.timestamp != null)
+            return false;
+        if (email != null ? !email.equals(audit.email) : audit.email != null)
+            return false;
+        if (type != null ? !type.equals(audit.type) : audit.type != null)
+            return false;
+        if (url != null ? !url.equals(audit.url) : audit.url != null)
+            return false;
+        return ip != null ? ip.equals(audit.ip) : audit.ip == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (ip != null ? ip.hashCode() : 0);
+        return result;
+    }
+
     public static Audit create(String email, String type, String url, String ip) {
         final Audit audit = new Audit();
         audit.setTimestamp(LocalDateTime.now());
         audit.setEmail(email);
         audit.setType(type);
         audit.setUrl(url);
+        audit.setIp(ip);
         return audit;
     }
 

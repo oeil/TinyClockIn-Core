@@ -120,12 +120,11 @@ public class EbeanStoreServiceImpl implements IStoreService {
     }
 
     @Override
-    public Audit audit(Audit audit) {
+    public Audit storeAudit(Audit audit) {
         if (audit == null) {
             return null;
         }
 
-        audit.setTimestamp(LocalDateTime.now());
         Ebean.save(audit);
         return audit;
     }
