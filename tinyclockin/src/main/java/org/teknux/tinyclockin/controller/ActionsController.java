@@ -20,6 +20,7 @@ package org.teknux.tinyclockin.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.tinyclockin.controller.audit.Logged;
 import org.teknux.tinyclockin.controller.security.Secured;
 import org.teknux.tinyclockin.model.Audit;
 import org.teknux.tinyclockin.model.ClockAction;
@@ -51,6 +52,7 @@ import java.util.Objects;
  */
 @Path("/api/actions")
 @Secured
+@Logged
 @Produces({ MediaType.APPLICATION_JSON })
 @Consumes({ MediaType.APPLICATION_JSON })
 public class ActionsController {
@@ -73,9 +75,6 @@ public class ActionsController {
 
         final String email = securityContext.getUserPrincipal().getName();
 
-        final Audit audit = Audit.create(email, Audit.Type.HTTP_GET, "api/actions" + (Boolean.TRUE.equals(latestOnly) ? "?lastestOnly=true" : ""), requestContext.getRemoteAddr());
-        getServiceManager().getService(IStoreService.class).storeAudit(audit);
-
         List<ClockAction> actionsToReturn = null;
         if (Boolean.TRUE.equals(latestOnly)) {
             final ClockAction lastAction = getServiceManager().getService(IStoreService.class).getLastAction(email);
@@ -86,8 +85,8 @@ public class ActionsController {
         } else {
             actionsToReturn = getServiceManager().getService(IStoreService.class).getActions(email);
         }
-
-        logger.debug("GET /api/actions [{} items] [{} sec]", actionsToReturn.size(), stopWatch.stop().getSeconds());
+        
+        logger.debug("GET /api/actions [{} items] [{} sec]", actionsToReturn.size(), stopWatch.getDuration().getSeconds());
         return actionsToReturn;
     }
 
@@ -97,17 +96,16 @@ public class ActionsController {
 
         final String email = securityContext.getUserPrincipal().getName();
 
-        final Audit audit = Audit.create(email, Audit.Type.HTTP_POST, "api/actions", requestContext.getRemoteAddr());
-        getServiceManager().getService(IStoreService.class).storeAudit(audit);
 
         Response errRsp = validateAction(action, email);
         if (errRsp != null) {
-            logger.debug("POST /api/actions [Http Status: {} | Msg: {}] [{} sec]", errRsp.getStatus(), errRsp.getEntity(), stopWatch.stop().getSeconds());
+            logger.debug("POST /api/actions [Http Status: {} | Msg: {}] [{} sec]", errRsp.getStatus(), errRsp.getEntity(), stopWatch.getDuration().getSeconds());
             return errRsp;
         }
 
         getServiceManager().getService(IStoreService.class).storeAction(email, action);
         logger.debug("POST /api/actions [{} | {}] [{} sec]", action.getType(), action.getWorkstation(), stopWatch.stop().getSeconds());
+
         return Response.status(Response.Status.OK).entity(action).build();
     }
 

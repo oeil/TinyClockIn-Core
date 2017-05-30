@@ -2,6 +2,7 @@ package org.teknux.tinyclockin.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teknux.tinyclockin.controller.audit.Logged;
 import org.teknux.tinyclockin.controller.security.Secured;
 import org.teknux.tinyclockin.model.Audit;
 import org.teknux.tinyclockin.service.IServiceManager;
@@ -29,6 +30,7 @@ import java.util.Objects;
  */
 @Path("/api/audits")
 @Secured
+@Logged
 @RolesAllowed({"ADMIN"})
 @Produces({ MediaType.APPLICATION_JSON })
 public class AuditController {
@@ -48,12 +50,6 @@ public class AuditController {
     @GET
     public Response audits(@Context HttpServletRequest requestContext) {
         final StopWatch stopWatch = StopWatch.get();
-
-        final String email = securityContext.getUserPrincipal().getName();
-
-        final Audit audit = Audit.create(email, Audit.Type.HTTP_GET, "api/audits", requestContext.getRemoteAddr());
-        getServiceManager().getService(IStoreService.class).storeAudit(audit);
-
         final List<Audit> auditsToReturn = getServiceManager().getService(IStoreService.class).getAudits();
         logger.debug("GET /api/audits [{} items] [{} sec]", auditsToReturn.size(), stopWatch.stop().getSeconds());
 

@@ -200,11 +200,11 @@ public abstract class AbsStoreServiceTest {
 
         final List<Audit> audits = new ArrayList<>();
         for (int i = 0; i < 10 ; i++) {
-            audits.add(Audit.create("email"+i, "GET", "URL"+i, "ip"+i));
+            audits.add(Audit.create("email"+i, "GET", "URL"+i, "ip"+i, 0+i, 0+i));
             Assert.assertNotNull(storeService.storeAudit(audits.get(i)));
             storeService.getAudits().get(i).equals(audits.get(i));
 
-            audits.add(Audit.create("email2"+i, "GET2", "URL2"+i, "ip2"+i));
+            audits.add(Audit.create("email2"+i, "GET2", "URL2"+i, "ip2"+i, 0+i, 0+i));
             Assert.assertNotNull(storeService.storeAudit(audits.get(i)));
             storeService.getAudits().get(i).equals(audits.get(i));
         }
@@ -220,7 +220,7 @@ public abstract class AbsStoreServiceTest {
 
         final List<Audit> audits = new ArrayList<>();
         for (int i = 0; i < maxAuditRecords ; i++) {
-            audits.add(Audit.create("email"+i, "GET", "URL"+i, "ip"+i));
+            audits.add(Audit.create("email"+i, "GET", "URL"+i, "ip"+i, 0+i, 0+i));
             Assert.assertNotNull(storeService.storeAudit(audits.get(i)));
             storeService.getAudits().get(i).equals(audits.get(i));
         }

@@ -38,6 +38,12 @@ public class Audit {
     @Column(name = "ip", nullable = false)
     private String ip;
 
+    @Column(name = "runtime", nullable = false)
+    private long runtime;
+
+    @Column(name = "status", nullable = false)
+    private int status;
+
     @XmlTransient
     public Integer getId() {
         return id;
@@ -88,6 +94,22 @@ public class Audit {
         this.ip = ip;
     }
 
+    public long getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(long runtime) {
+        this.runtime = runtime;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -97,6 +119,10 @@ public class Audit {
 
         Audit audit = (Audit) o;
 
+        if (runtime != audit.runtime)
+            return false;
+        if (status != audit.status)
+            return false;
         if (id != null ? !id.equals(audit.id) : audit.id != null)
             return false;
         if (timestamp != null ? !timestamp.equals(audit.timestamp) : audit.timestamp != null)
@@ -118,16 +144,20 @@ public class Audit {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
         result = 31 * result + (ip != null ? ip.hashCode() : 0);
+        result = 31 * result + (int) (runtime ^ (runtime >>> 32));
+        result = 31 * result + status;
         return result;
     }
 
-    public static Audit create(String email, String type, String url, String ip) {
+    public static Audit create(String email, String type, String url, String ip, long runtime, int status) {
         final Audit audit = new Audit();
         audit.setTimestamp(LocalDateTime.now());
         audit.setEmail(email);
         audit.setType(type);
         audit.setUrl(url);
         audit.setIp(ip);
+        audit.setRuntime(runtime);
+        audit.setStatus(status);
         return audit;
     }
 

@@ -9,6 +9,8 @@
             <column name="type" type="varchar"/>
             <column name="url" type="varchar"/>
             <column name="ip" type="varchar"/>
+            <column name="runtime" type="bigint"/>
+            <column name="status" type="int"/>
         </createTable>
     </changeSet>
 </migration>

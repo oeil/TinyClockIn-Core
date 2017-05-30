@@ -1,5 +1,6 @@
 package org.teknux.tinyclockin.controller;
 
+import org.teknux.tinyclockin.controller.audit.Logged;
 import org.teknux.tinyclockin.exception.AppException;
 import org.teknux.tinyclockin.model.Version;
 import org.teknux.tinyclockin.util.ApplicationProperties;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.MediaType;
  * @author Francois EYL
  */
 @Path("/api/version")
+@Logged
 @Produces({ MediaType.APPLICATION_JSON })
 @Consumes({ MediaType.APPLICATION_JSON })
 public class VersionController {
