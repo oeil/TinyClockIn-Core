@@ -7,7 +7,7 @@ import org.teknux.tinyclockin.service.IServiceManager;
 import org.teknux.tinyclockin.service.ServiceManager;
 import org.teknux.tinyclockin.service.store.IStoreService;
 import org.teknux.tinyclockin.util.StopWatch;
-import org.teknux.tinyclockin.util.StopWatchServletContextUtil;
+import org.teknux.tinyclockin.util.StopWatchServletRequesttUtil;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -50,7 +50,7 @@ public class AuditFilter implements ContainerRequestFilter, ContainerResponseFil
 
         final String email = principal == null ? null : principal.getName();
         final String method = requestContext.getMethod();
-        final long runtime = StopWatchServletContextUtil.read(servletContext).getDuration().getSeconds();
+        final long runtime = StopWatchServletRequesttUtil.read(servletRequest).getDuration().getSeconds();
         final String url = servletRequest.getServletPath();
         final String ip = servletRequest.getRemoteHost();
         final int status = responseContext.getStatus();
@@ -63,6 +63,6 @@ public class AuditFilter implements ContainerRequestFilter, ContainerResponseFil
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        StopWatchServletContextUtil.store(servletContext, StopWatch.get());
+        StopWatchServletRequesttUtil.store(servletRequest, StopWatch.get());
     }
 }

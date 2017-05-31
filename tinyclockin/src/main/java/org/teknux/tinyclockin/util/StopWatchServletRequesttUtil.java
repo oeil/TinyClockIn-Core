@@ -1,22 +1,22 @@
 package org.teknux.tinyclockin.util;
 
-import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
  * @author Francois EYL
  */
-public class StopWatchServletContextUtil {
+public class StopWatchServletRequesttUtil {
 
     private static String STOPWATCH_HEADER_KEY = "InternalStopWatch";
 
-    private StopWatchServletContextUtil() {}
+    private StopWatchServletRequesttUtil() {}
 
-    public static void store(ServletContext context, StopWatch stopWatch) {
+    public static void store(HttpServletRequest context, StopWatch stopWatch) {
         context.setAttribute(STOPWATCH_HEADER_KEY, stopWatch);
     }
 
-    public static StopWatch read(ServletContext context) {
+    public static StopWatch read(HttpServletRequest context) {
         return (StopWatch) context.getAttribute(STOPWATCH_HEADER_KEY);
     }
 }
