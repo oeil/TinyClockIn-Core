@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
 
@@ -44,7 +43,6 @@ public class Audit {
     @Column(name = "status", nullable = false)
     private int status;
 
-    @XmlTransient
     public Integer getId() {
         return id;
     }

@@ -72,7 +72,6 @@ public class ClockAction {
         this.workstation = workstation;
     }
 
-    @XmlTransient
     public Integer getId() {
         return id;
     }

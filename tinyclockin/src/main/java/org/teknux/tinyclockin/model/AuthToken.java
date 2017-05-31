@@ -40,7 +40,6 @@ public class AuthToken {
 
     @Id
     @Column(unique = true, nullable = false)
-    @JsonIgnore
     private Integer id;
 
     @Column(nullable = false, unique = true)
@@ -69,7 +68,6 @@ public class AuthToken {
         this.token = token;
     }
 
-    @XmlTransient
     public Integer getId() {
         return id;
     }
