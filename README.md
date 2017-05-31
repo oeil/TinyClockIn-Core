@@ -17,6 +17,7 @@ Request Body (JSON)
 Response Body (JSON
 ```
 {
+  “id”: 1,
   “email”: “user.name@domain.com”,
   “token”: “TOKEN_ID”
 }
