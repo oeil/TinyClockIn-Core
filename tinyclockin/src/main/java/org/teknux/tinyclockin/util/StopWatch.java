@@ -18,6 +18,7 @@
 
 package org.teknux.tinyclockin.util;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -27,7 +28,9 @@ import java.time.LocalDateTime;
  *
  * @author Francois EYL
  */
-public class StopWatch {
+public class StopWatch implements Serializable {
+
+    private static final long serialVersionUID = 2L;
 
     private LocalDateTime start;
     private LocalDateTime stop;

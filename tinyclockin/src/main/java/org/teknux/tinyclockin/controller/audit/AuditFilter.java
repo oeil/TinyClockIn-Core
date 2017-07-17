@@ -50,7 +50,8 @@ public class AuditFilter implements ContainerRequestFilter, ContainerResponseFil
 
         final String email = principal == null ? null : principal.getName();
         final String method = requestContext.getMethod();
-        final long runtime = StopWatchServletRequesttUtil.read(servletRequest).getDuration().getSeconds();
+        final StopWatch stopWatch = StopWatchServletRequesttUtil.read(servletRequest);
+        final long runtime = stopWatch == null ? -1L : stopWatch.getDuration().getSeconds();
         final String url = servletRequest.getServletPath();
         final String ip = servletRequest.getRemoteHost();
         final int status = responseContext.getStatus();
